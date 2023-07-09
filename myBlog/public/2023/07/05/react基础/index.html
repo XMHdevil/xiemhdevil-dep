@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——react | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——react`
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <!-- <a href="http://example.com/"> -->
+          <a href="/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <!-- <li>
+          <a href="/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li> -->
+        <li>
+          <a href="/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"Canvas","path":"2023/07/05/Canvas/"},{"title":"CSS","path":"2023/07/05/css/"},{"title":"Hello World","path":"2023/07/03/hello-world/"},{"title":"react","path":"2023/07/05/react基础/"},{"title":"TypeScript","path":"2023/07/03/typeScript/"},{"title":"vue-property-decorator","path":"2023/07/05/vue中的装饰器/"},{"title":"webstorm","path":"2023/07/05/webstorm/"},{"title":"浏览器兼容问题","path":"2023/07/04/前端浏览器兼容问题/"},{"title":"常用函数(js)","path":"2023/07/05/常用js函数/"},{"title":"SVG","path":"2023/07/05/SVG/"},{"title":"浏览器的工作原理","path":"2023/07/04/浏览器的工作原理/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/favicon.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">Xmh.</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">幻想</span>
+          <span class="main-left--tag">静</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“快乐和痛苦并存”</p>
+        <p>“我的快乐小站”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/XMHdevil"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>7</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>10</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>11 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>3天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <style>
+pre::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+  background-color:#F5F5F5;
+}
+/*定义滚动条轨道
+内阴影+圆角*/
+pre::-webkit-scrollbar-track {
+  background-color:#F5F5F5;
+}
+/*定义滑块
+内阴影+圆角*/
+pre::-webkit-scrollbar-thumb {
+  background-color: rgb(69, 83, 100);
+}
+
+pre:active {
+  background-color: rgb(81, 95, 116);
+}
+</style>
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">react</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            <a class="category-link" href="/categories/react/">React</a>
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            <a class="tag-link" href="/tags/react%E6%A1%86%E6%9E%B6/" rel="tag">react框架</a>
+          </div>
+          
+          <p class="article-info--date">日期：2023-07-05 18:34:22</p>
+        </div>
+        <img src="/imgs/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content">
+      <h2 id="react基础"><a href="#react基础" class="headerlink" title="react基础"></a>react基础</h2><h3 id="一、react特点"><a href="#一、react特点" class="headerlink" title="一、react特点"></a>一、react特点</h3><ol>
+<li>采用组件化模式、声明式编码，提高开发效率及组件复用率</li>
+<li>在React Native中可以使用React语法进行移动端开发</li>
+<li>使用虚拟DOM+Diffing算法，尽量减少与真实DOM的交互</li>
+</ol>
+<h3 id="二、需要掌握的js知识"><a href="#二、需要掌握的js知识" class="headerlink" title="二、需要掌握的js知识"></a>二、需要掌握的js知识</h3><p>判断this指向</p>
+<p>class（类）</p>
+<p>ES6语法规范</p>
+<p>npm包管理器</p>
+<p>原型、原型链</p>
+<p>数组常用方法</p>
+<p>模块化</p>
+<h3 id="三、虚拟DOM与真实DOM"><a href="#三、虚拟DOM与真实DOM" class="headerlink" title="三、虚拟DOM与真实DOM"></a>三、虚拟DOM与真实DOM</h3><ol>
+<li><p>React提供了一些API来创建一种 “特别” 的一般js对象</p>
+<pre class="line-numbers language-markup" data-language="markup"><code class="language-markup">const VOM = React.createElement('xx',&#123;id: 'xx'&#125;, 'xx')<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+
+</li>
+<li><p>虚拟DOM对象最终都会被React转换为真实的DOM</p>
+</li>
+</ol>
+<h3 id="四、JSX"><a href="#四、JSX" class="headerlink" title="四、JSX"></a>四、JSX</h3><p>全称：JavaScript XML</p>
+<p>用来简化创建虚拟DOM</p>
+<p>便签名任意，属性任意，</p>
+<p>基本语法规则：</p>
+<pre class="line-numbers language-typescript" data-language="typescript"><code class="language-typescript"><span class="token number">1</span>、 遇到 <span class="token operator">&lt;</span>开头的代码<span class="token punctuation">,</span> 以标签的语法解析<span class="token operator">:</span> html同名标签转换为html同名元素<span class="token punctuation">,</span> 其它标签需要特别解析
+
+<span class="token number">2</span>、 遇到以 <span class="token string">'&#123;'</span> 开头的代码，以<span class="token constant">JS</span>语法解析<span class="token operator">:</span> 标签中的js表达式必须用<span class="token punctuation">&#123;</span> <span class="token punctuation">&#125;</span>包含
+
+babel<span class="token punctuation">.</span>js的作用
+
+<span class="token number">1.</span>浏览器不能直接解析<span class="token constant">JSX</span>代码，需要babel转义为纯js的代码才能运行
+
+<span class="token number">2</span>、只要用了<span class="token constant">JSX</span> ，都要加上type<span class="token operator">=</span>“text<span class="token operator">/</span>babel”，声明需要babel来处理
+
+
+
+<span class="token constant">JSX</span>语法规则
+<span class="token number">1</span>、定义虚拟<span class="token constant">DOM</span>时，不要写引号
+<span class="token number">2</span>、标签中混入<span class="token constant">JS</span>表达式时要用<span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+<span class="token number">3</span>、样式类名指定不要用<span class="token keyword">class</span>，要用className
+<span class="token number">4</span>、内联样式，要用style<span class="token operator">=</span><span class="token punctuation">&#123;</span><span class="token punctuation">&#123;</span>key<span class="token operator">:</span>value<span class="token punctuation">&#125;</span><span class="token punctuation">&#125;</span>的形式去写
+<span class="token number">5</span>、只有一个根标签
+<span class="token number">6</span>、标签必须闭合
+<span class="token number">7</span>、标签首字母
+（<span class="token number">1</span>）、若小写字母开头，则将标签转为html中同名元素，若html中元素无该标签对应的同名元素，则报错。
+<span class="token function">​</span>	<span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span>、若大写字母开头，react就去渲染对应的组件，若组件没有定义，则报错。
+<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+
+<p><code>注意区分：【js语句（代码）】与【js表达式】</code></p>
+<p>​	1、表达式： 一个表达式会产生一个值，可以放在任何一个需要值的地方</p>
+<p>例如：</p>
+<pre class="line-numbers language-typescript" data-language="typescript"><code class="language-typescript"><span class="token operator">-</span> a
+
+<span class="token operator">-</span> a<span class="token operator">+</span>b
+
+<span class="token operator">-</span> <span class="token function">demo</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span>
+
+<span class="token operator">-</span> arr<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token operator">-</span> <span class="token keyword">function</span> <span class="token function">test</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span><span class="token punctuation">&#125;</span>
+
+  <span class="token number">2</span>、语句（代码）：
+
+例如：
+
+<span class="token operator">-</span> <span class="token keyword">if</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">-</span> <span class="token keyword">for</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token operator">-</span> <span class="token keyword">switch</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">&#123;</span><span class="token keyword">case</span><span class="token operator">:</span>xxx<span class="token punctuation">&#125;</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+<h3 id="五、模块与组件"><a href="#五、模块与组件" class="headerlink" title="五、模块与组件"></a>五、模块与组件</h3><h4 id="1）、模块"><a href="#1）、模块" class="headerlink" title="1）、模块"></a>1）、模块</h4><p>作用：复用js，简化js的编写，提高js运行效率</p>
+<p>模块化：当应用的js都以模块来编写的，这个应用就是一个模块化的作用</p>
+<h4 id="2）、组件"><a href="#2）、组件" class="headerlink" title="2）、组件"></a>2）、组件</h4><p>作用： 复用编码，简化项目编写，提高运行效率</p>
+<p>组件化：当应用是以多组件的方式实现，这个应用就是一个组件化 的应用</p>
+<h3 id="六、React面向组件编程"><a href="#六、React面向组件编程" class="headerlink" title="六、React面向组件编程"></a>六、React面向组件编程</h3><h4 id="函数式组件"><a href="#函数式组件" class="headerlink" title="函数式组件"></a>函数式组件</h4><h4 id="类组件"><a href="#类组件" class="headerlink" title="类组件"></a>类组件</h4><p>类的基本知识</p>
+<p>1、类中的构造器不是必须要写的，要对实例进行一些初始化的操作，如添加指定属性的时才写。</p>
+<p>2、如果A类继承了B类，且A类中写了构造器，那么A类构造器中的super是必须要调用的。</p>
+<p>3、类中所定义的方法，都放在了类的原型对象上，供实例去使用。</p>
+<blockquote>
+<p>执行ReactDom.render(<MyComponent/>)…之后，发生了什么？</p>
+<ol>
+<li>React解析组件标签，找到MyComponent组件。</li>
+<li>发现组价是使用类定义的，随后new出来该类的实例，并通过该实例调用原型上的reader函数</li>
+<li>将render返回的虚拟DOM转为真实DOM，随后呈现在页面中。</li>
+</ol>
+</blockquote>
+<p>组件实例的三大属性：</p>
+<ol>
+<li>state</li>
+<li>props</li>
+<li>refs</li>
+</ol>
+<p>对props进行限制</p>
+<p>通过propTypes来对标签属性进行类型，必要性的限制</p>
+<p>通过defaultProps来指定标签属性值</p>
+<p>函数组件可以使用props，因为函数可以传入参数，props可以当做参数传入，</p>
+<h4 id="ref有两种形式"><a href="#ref有两种形式" class="headerlink" title="ref有两种形式"></a>ref有两种形式</h4><p>1、 字符串形式，旧版</p>
+<p>2、回调函数形式</p>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2023/07/05/react基础/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1" style="max-height: 400px;overflow: auto;">
+        <h3>目录</h3>
+        <!-- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#react%E5%9F%BA%E7%A1%80"><span class="toc-number">1.</span> <span class="toc-text">react基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81react%E7%89%B9%E7%82%B9"><span class="toc-number">1.1.</span> <span class="toc-text">一、react特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%9C%80%E8%A6%81%E6%8E%8C%E6%8F%A1%E7%9A%84js%E7%9F%A5%E8%AF%86"><span class="toc-number">1.2.</span> <span class="toc-text">二、需要掌握的js知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%99%9A%E6%8B%9FDOM%E4%B8%8E%E7%9C%9F%E5%AE%9EDOM"><span class="toc-number">1.3.</span> <span class="toc-text">三、虚拟DOM与真实DOM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81JSX"><span class="toc-number">1.4.</span> <span class="toc-text">四、JSX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A8%A1%E5%9D%97%E4%B8%8E%E7%BB%84%E4%BB%B6"><span class="toc-number">1.5.</span> <span class="toc-text">五、模块与组件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%EF%BC%89%E3%80%81%E6%A8%A1%E5%9D%97"><span class="toc-number">1.5.1.</span> <span class="toc-text">1）、模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%EF%BC%89%E3%80%81%E7%BB%84%E4%BB%B6"><span class="toc-number">1.5.2.</span> <span class="toc-text">2）、组件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81React%E9%9D%A2%E5%90%91%E7%BB%84%E4%BB%B6%E7%BC%96%E7%A8%8B"><span class="toc-number">1.6.</span> <span class="toc-text">六、React面向组件编程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6"><span class="toc-number">1.6.1.</span> <span class="toc-text">函数式组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E7%BB%84%E4%BB%B6"><span class="toc-number">1.6.2.</span> <span class="toc-text">类组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ref%E6%9C%89%E4%B8%A4%E7%A7%8D%E5%BD%A2%E5%BC%8F"><span class="toc-number">1.6.3.</span> <span class="toc-text">ref有两种形式</span></a></li></ol></li></ol></li></ol> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#react%E5%9F%BA%E7%A1%80"><span class="toc-text">react基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81react%E7%89%B9%E7%82%B9"><span class="toc-text">一、react特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E9%9C%80%E8%A6%81%E6%8E%8C%E6%8F%A1%E7%9A%84js%E7%9F%A5%E8%AF%86"><span class="toc-text">二、需要掌握的js知识</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E8%99%9A%E6%8B%9FDOM%E4%B8%8E%E7%9C%9F%E5%AE%9EDOM"><span class="toc-text">三、虚拟DOM与真实DOM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9B%E3%80%81JSX"><span class="toc-text">四、JSX</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%A8%A1%E5%9D%97%E4%B8%8E%E7%BB%84%E4%BB%B6"><span class="toc-text">五、模块与组件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1%EF%BC%89%E3%80%81%E6%A8%A1%E5%9D%97"><span class="toc-text">1）、模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2%EF%BC%89%E3%80%81%E7%BB%84%E4%BB%B6"><span class="toc-text">2）、组件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AD%E3%80%81React%E9%9D%A2%E5%90%91%E7%BB%84%E4%BB%B6%E7%BC%96%E7%A8%8B"><span class="toc-text">六、React面向组件编程</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6"><span class="toc-text">函数式组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%B1%BB%E7%BB%84%E4%BB%B6"><span class="toc-text">类组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#ref%E6%9C%89%E4%B8%A4%E7%A7%8D%E5%BD%A2%E5%BC%8F"><span class="toc-text">ref有两种形式</span></a></li></ol></li></ol></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2023/07/05/常用js函数/">常用函数(js)</a>
+            </p>
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2023/07/05/vue中的装饰器/">vue-property-decorator</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<script src="http://cdn.yangxiang.cc/prism.js"></script>
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧~","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2023/07/05/react基础/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello~，欢迎你们来到我的博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <!-- <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index"></a> </p>
+  </div> -->
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        console.log(_commentDom)
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      if (/^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(location.pathname.replace(rootPath, ''))) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+          window.loadImageFn();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+      // $('.main-container').fadeIn()
+    })
+  </script>
+</body>
+</html>

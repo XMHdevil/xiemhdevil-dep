@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>我的技术与生活——webstorm | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="shortcut icon" href="/imgs/favicon.ico" type="image/x-icon">
+  <link rel="stylesheet" href="/css/public.css" />
+  <link rel="stylesheet" href="/css/layout.css" />
+  <link rel="stylesheet" href="/css/iconfont.css" />
+  <link rel="stylesheet" href="/css/APlayer.min.css" />
+  <script src="/js/APlayer.min.js"></script>
+  <script src="/js/jquery.min.js"></script>
+  <script src="/js/jquery.pjax.min.js"></script>
+
+  <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+  <script>
+    document.title = `我的技术与生活——webstorm`
+  </script>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<style>
+  .load {
+    width: 100%;
+    height: 100vh;
+    background-color: rgb(37, 35, 40);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 9999;
+  }
+  .load-circle {
+    width: 80px;
+    height: 80px;
+    border: 8px solid orange;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: rotate 1s linear infinite;
+    filter: drop-shadow(0 0 3px orange);
+  }
+  .load-circle-inner {
+    width: 40px;
+    height: 40px;
+    border: 8px solid orange;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: rotate-reverse .5s linear infinite;
+  }
+  .load-text {
+    margin-top: 20px;
+    font-size: 24px;
+    color: orange;
+    display: flex;
+  }
+  .load-text span {
+    margin: 0 5px;
+    text-shadow: 5px 5px 5px orange;
+    animation: move 1s linear infinite;
+  }
+  .load-text span:nth-child(1) {
+    animation-delay: -0.6s;
+  }
+  .load-text span:nth-child(2) {
+    animation-delay: -0.5s;
+  }
+  .load-text span:nth-child(3) {
+    animation-delay: -0.4s;
+  }
+  .load-text span:nth-child(4) {
+    animation-delay: -0.3s;
+  }
+  .load-text span:nth-child(5) {
+    animation-delay: -0.2s;
+  }
+  .load-text span:nth-child(6) {
+    animation-delay: -0.1s;
+  }
+  @keyframes rotate {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(360deg); }
+  }
+  @keyframes rotate-reverse {
+    0% { transform: rotate(0); }
+    100% { transform: rotate(-360deg); }
+  }
+  @keyframes move {
+    0% { transform: translateY(0%) rotate(0) scale(1); }
+    20% { transform: translateY(20%) rotate(10deg) scale(1.2); }
+    80% { transform: translateY(-10%) rotate(-20deg) scale(.8);}
+    100% { transform: translateY(0) rotate(0) scale(1); }
+  }
+
+  .progress {
+    position: fixed;
+    left: 0; top: 0;
+    width: 0;
+    height: 3px;
+    background-color: green;
+    transition: all cubic-bezier(0.215, 0.610, 0.355, 1) .1s;
+    z-index: 9999;
+  }
+
+  .to-up {
+    animation: toUp .5s 1;
+  }
+  .gray {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 9999;
+    display: none;
+    pointer-events: none;
+    background-color: #000;
+    mix-blend-mode: color;
+  }
+  @keyframes toUp {
+    from { transform: translateY(15px); opacity: 0; }
+    to { transform: translateY(0) ; opacity: 1; }
+  }
+</style>
+<body>
+  <div id="load" class="load">
+    <div class="load-circle">
+      <div class="load-circle-inner"></div>
+    </div>
+    <p class="load-text">
+      <span>L</span>
+      <span>O</span>
+      <span>A</span>
+      <span>D</span>
+      <span>I</span>
+      <span>N</span>
+      <span>G</span>
+    </p>
+  </div>
+  <div id="container" class="container w-100 vh-100" style="display: none;">
+    <header class="header">
+  <div class="header-wrapper">
+    <div class="header-left">
+      <div class="header-search">
+        <input id="search-input" type="text" class="header-search--input" placeholder="请输入要检索的文章标题" />
+        <span id="search-btn" class="header-search--icon"><i class="iconfont icon-sousuo"></i></span>
+      </div>
+      <div id="search-layer" class="header-search--layer hidden">
+        <p class="title">
+          <span>以下是搜索内容：</span>
+          <span id="close-layer-btn">关闭</span>
+        </p>
+        <ul>
+        </ul>
+      </div>
+    </div>
+    <div class="header-right">
+      <ul class="header-menu">
+        <li>
+          <!-- <a href="http://example.com/"> -->
+          <a href="/">
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+            <span class="header-menu--span">首页</span>
+          </a>
+        </li>
+        <li>
+          <a href="/log">
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+            <span class="header-menu--span">日志</span>
+          </a>
+        </li>
+        <!-- <li>
+          <a href="/link">
+            <i class="header-menu--icon iconfont icon-youqinglianjie"></i>
+            <span class="header-menu--span">友情链接</span>
+          </a>
+        </li> -->
+        <li>
+          <a href="/about">
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+            <span class="header-menu--span">关于我</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<script>
+  const ipt = document.querySelector('#search-input')
+  const btn = document.querySelector('#search-btn')
+  const layer = document.querySelector('#search-layer')
+  const posts = JSON.parse(`[{"title":"Canvas","path":"2023/07/05/Canvas/"},{"title":"CSS","path":"2023/07/05/css/"},{"title":"Hello World","path":"2023/07/03/hello-world/"},{"title":"react","path":"2023/07/05/react基础/"},{"title":"TypeScript","path":"2023/07/03/typeScript/"},{"title":"vue-property-decorator","path":"2023/07/05/vue中的装饰器/"},{"title":"webstorm","path":"2023/07/05/webstorm/"},{"title":"浏览器兼容问题","path":"2023/07/04/前端浏览器兼容问题/"},{"title":"常用函数(js)","path":"2023/07/05/常用js函数/"},{"title":"SVG","path":"2023/07/05/SVG/"},{"title":"浏览器的工作原理","path":"2023/07/04/浏览器的工作原理/"}]`)
+  ipt.addEventListener('keyup', e => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  })
+  btn.addEventListener('click', () => {
+    handleSearch()
+  })
+
+  document.querySelector('#close-layer-btn').addEventListener('click', () => {
+    layer.classList.toggle('hidden')
+  })
+
+  function handleSearch() {
+    if (ipt.value.trim() === '') {
+      return
+    }
+    let html = ''
+    const targetPosts = posts.filter(post => post.title.includes(ipt.value))
+    targetPosts.forEach(post => {
+      html += `
+        <li>
+          <div>
+            <a href="/${post.path}">${post.title.replace(new RegExp(ipt.value), `<span>${ipt.value}</span>`)}</a>
+          </div>
+          <img src="${post.cover || '/imgs/default-cover.webp' }" />
+        </li>
+      `
+    })
+    if (html.trim () === '') {
+      html += '<p class="empty">没有搜索到内容</p>'
+    }
+    layer.querySelector('ul').innerHTML = html
+    layer.classList.remove('hidden')
+  }
+</script> 
+    <section id="main" class="main">
+      <div class="main-left-wrapper">
+<div class="main-left">
+  <div class="main-left--block">
+    <div class="main-left--info">
+      <img src="/imgs/favicon.jpg"" class="main-left--avatar" />
+      <div class="main-left--intro">
+        <p class="main-left--name">Xmh.</p>
+        <div class="main-left--tags">
+          <span class="main-left--tag">幻想</span>
+          <span class="main-left--tag">静</span>
+        </div>
+      </div>
+    </div>
+  
+    <div>
+      <div class="main-left--motto">
+        <p>“快乐和痛苦并存”</p>
+        <p>“我的快乐小站”</p>
+      </div>
+      <div class="main-left--github">
+        <span class="line"></span>
+        <a target="_blank" rel="noopener" href="https://github.com/XMHdevil"><i class="logo iconfont icon-github-fill"></i></a>
+        <span class="line"></span>
+      </div>
+      <div class="main-left--statics">
+        <a href="/categories">
+          <div>
+            <span>7</span>
+            <span>分类</span>
+          </div>
+        </a>
+        <a href="/tags">
+          <div>
+            <span>10</span>
+            <span>标签</span>
+          </div>
+        </a>
+        <a href="/archives">
+          <div>
+            <span>1 </span>
+            <span>归档</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="main-left--block">
+    <ul class="main-left--menu">
+      
+        <li>
+          <a href="/">
+            <span class="header-menu--span">小站首页</span>
+            <i class="header-menu--icon iconfont icon-shouye"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/log">
+            <span class="header-menu--span">个人日志</span>
+            <i class="header-menu--icon iconfont icon-rizhi"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/about">
+            <span class="header-menu--span">关于自己</span>
+            <i class="header-menu--icon iconfont icon-guanyuwomen"></i>
+          </a>
+        </li>
+      
+        <li>
+          <a href="/tools">
+            <span class="header-menu--span">我的工具</span>
+            <i class="header-menu--icon iconfont icon-gongju"></i>
+          </a>
+        </li>
+      
+    </ul>
+  </div>
+
+  <div class="main-left--block">
+    <div class="main-left--site">
+      <h5 class="main-left--title">
+        <span>站点信息</span>
+        <i class="iconfont icon-zhandian"></i>
+      </h5>
+      <p class="main-left--subtitle">
+        <span>文章数目：</span>
+        <span>11 篇</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>最近动态：</span>
+        <span>今天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>上线时间：</span>
+        <span>3天</span>
+      </p>
+      <p class="main-left--subtitle">
+        <span>当前版本：</span>
+        <span>v1.0.2</span>
+      </p>
+    </div>
+  </div>
+</div></div>
+      <div id="main-container" class="main-container">
+
+
+  <style>
+pre::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+  background-color:#F5F5F5;
+}
+/*定义滚动条轨道
+内阴影+圆角*/
+pre::-webkit-scrollbar-track {
+  background-color:#F5F5F5;
+}
+/*定义滑块
+内阴影+圆角*/
+pre::-webkit-scrollbar-thumb {
+  background-color: rgb(69, 83, 100);
+}
+
+pre:active {
+  background-color: rgb(81, 95, 116);
+}
+</style>
+
+<div class="article-container">
+  <div class="article">
+    <h1 class="article-title">webstorm</h1>
+    <div class="article-info">
+      <div class="article-info--item">
+        <div class="article-info--info">
+          
+          <div class="article-info--categories">
+            <span>分类：</span>
+            <a class="category-link" href="/categories/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/">开发工具</a>
+          </div>
+          
+          
+          <div class="article-info--tags">
+            <span>标签：</span>
+            <a class="tag-link" href="/tags/webstorm%E5%B7%A5%E5%85%B7/" rel="tag">webstorm工具</a>
+          </div>
+          
+          <p class="article-info--date">日期：2023-07-05 18:31:18</p>
+        </div>
+        <img src="/imgs/default-cover.webp" alt="" class="article-cover">
+      </div>
+    </div>
+    <article class="article-content">
+      <h2 id="webstorm快捷键"><a href="#webstorm快捷键" class="headerlink" title="webstorm快捷键"></a>webstorm快捷键</h2><h2 id="webstorm设置技巧"><a href="#webstorm设置技巧" class="headerlink" title="webstorm设置技巧"></a>webstorm设置技巧</h2><ul>
+<li>如何更改主题（字体&amp;配色）:<br>File -&gt; settings -&gt; Editor -&gt; colors&amp;fonts -&gt; scheme name.<a target="_blank" rel="noopener" href="http://phpstorm-themes.com/">主题下载地址</a></li>
+<li>如何让webstorm启动的时候不打开工程文件：<br>File -&gt; Settings-&gt;General去掉Reopen last project on startup.</li>
+<li>如何完美显示中文：<br>File -&gt; Settings-&gt;Appearance中勾选Override default fonts by (not recommended)，设置Name:NSimSun，Size:12</li>
+<li>如何显示行号：<br>File -&gt; Settings-&gt;Editor，”Show line numbers”打上勾，就显示行号了</li>
+<li>如何代码自动换行：<br>File -&gt; settings -&gt; Editor “Use Soft Wraps in editor” 打上钩，代码就自动换行了</li>
+<li>如何点击光标，显示在本行末尾：<br>File -&gt; Settings-&gt;Editor “Allow placement of caret after end of line”去掉勾就行了。</li>
+<li>如何修改快键键：<br>File -&gt; Settings-&gt;Keymap，然后双击要修改快捷的功能会有提示框出来，按提示操作</li>
+<li>换成自己熟悉编辑器的快键键：<br>File -&gt;Settings-&gt;Keymap，支持像Visual Studio、Eclipse、NetBeans这样的主流IDE。</li>
+<li>javascript类库提示。<br>File -&gt; settings -&gt; Javascript -&gt; Libraries -&gt; 然后在列表里选择自己经常用到的javascript类库，最后Download and Install就ok了.</li>
+<li>在开发js时发现，需要ctrl + return 才能选候选项：<br>File -&gt; Setting -&gt; Editor -&gt; Code Completion -&gt; Preselect the first suggestion: “Smart” 改为 “Always”</li>
+<li>js提示比较迟缓<br>File -&gt; Code Completion -&gt; Autopopup in 下 1000改为0</li>
+<li>git配置：<br>File -&gt; settings -&gt; Editor -&gt; github，进去改github的账户，如果没有git则不需要.</li>
+<li>插件安装：<br>File -&gt;plugins，然后就选择给力的插件们再安装.(“css-X-fire”插件,用于当使用firebug修改css属性时，编辑器内的css代码也会发生变化。）</li>
+<li>以后更新</li>
+</ul>
+<h2 id="webstorm使用心得"><a href="#webstorm使用心得" class="headerlink" title="webstorm使用心得"></a>webstorm使用心得</h2><ul>
+<li>收藏夹功能:<br>当工程目录很庞大时，有些子目录很经常打开，但层级又很深，这时候可以把目录添加到收藏夹里面，添加成功后，左侧有个“Favorites”菜单</li>
+<li>面包屑导航：<br>除了左侧的工程页面，可以选择目录之外，在顶部菜单下有一个类似网站面包屑导航一样的目录也可以实现相同功。点击每个目录就会有下拉菜单显示其下的子目录，很实用.</li>
+<li>构造器界面:<br>注释符合格式的话就会出现。如果是js文件则是js类的函数和对象；css文件的话则是这个css文件的概括；html文件的话则是节点的结构图。话说这几个就是为了方便查看代码的结构性.</li>
+<li>todo界面：<br>给代码加todo注释就会出现这个界面</li>
+<li>双栏代码界面：<br>右击代码选项卡上的文件，然后右键 -&gt; spilt vertically(左右两屏)或者spilt horizontally(上下两屏)</li>
+<li>本地历史功能:<br>找回代码的好办法</li>
+</ul>
+<h2 id="WebStorm集成git使用"><a href="#WebStorm集成git使用" class="headerlink" title="WebStorm集成git使用"></a>WebStorm集成git使用</h2><p>webstorm中只集成了git的常用操作，并不能完全替代命令行工具。在界面的右下角可以查看处于哪个git分支。也可以在上面点击切换或者新建分支。</p>
+<ul>
+<li>查看当前代码与版本库代码的差异:<br>右击代码界面任意区域，选择git -&gt; compare with然后选择要比较的版本库。</li>
+</ul>
+<h2 id="webstorm快捷键说明"><a href="#webstorm快捷键说明" class="headerlink" title="webstorm快捷键说明"></a>webstorm快捷键说明</h2><p>Editing<strong>编辑相关快捷键</strong></p>
+<ul>
+<li><p>Ctrl + shift   -或者 +  折叠或者打开</p>
+</li>
+<li><p>Ctrl + Space：<br>Basic code completion (the name of any class, method or variable) 基本代码完成（任何类、函数或者变量名称），改为Alt+S</p>
+</li>
+<li><p>Ctrl + Shift + Enter：<br>Complete statement 补全当前语句</p>
+</li>
+<li><p>Ctrl + P：<br>Parameter info (within method call arguments) 参数信息 包括方法调用参数</p>
+</li>
+<li><p>Ctrl + mouse over code<br>Brief Info 简单信息</p>
+</li>
+<li><p>Ctrl + F1<br>Show description of error or warning at caret 显示光标所在位置的错误信息或者警告信息</p>
+</li>
+<li><p>Alt + Insert<br>Generate code…（Getters, Setters, Constructors）新建一个文件或者生成代码，…构造函数，可以创建类里面任何字段的getter与setter方法</p>
+</li>
+<li><p>Ctrl + O<br>Override methods 重载方法</p>
+</li>
+<li><p>Ctrl + I<br>Implement methods 实现方法</p>
+</li>
+<li><p>Ctrl + Alt + T<br>Surround with…（if, else, try, catch, for, etc）用 * 来围绕选中的代码行，（ * 包括 if 、 while 、 try catch 等）</p>
+</li>
+<li><p>Ctrl + &#x2F;<br>Comment&#x2F;uncomment with line comment 行注释&#x2F;取消行注释</p>
+</li>
+<li><p>Ctrl + Shift + &#x2F;<br>Comment&#x2F;uncomment with block comment 块注释&#x2F;取消块注释</p>
+</li>
+<li><p>Ctrl + W<br>Select successively increasing code blocks 选择代码块，一般是增量选择</p>
+</li>
+<li><p>Ctrl + Shift + W<br>Decrease current selection to previous state 上个快捷键的回退，减量选择代码</p>
+</li>
+<li><p>Alt + Q<br>Context info 上下文信息</p>
+</li>
+<li><p>Alt + Enter<br>Show intention actions and quick-fixes 意图行动，快速见效</p>
+</li>
+<li><p>Ctrl + Alt + L<br>Reformat code 根据模板格式对代码格式化</p>
+</li>
+<li><p>Tab&#x2F; Shift + Tab<br>Indent&#x2F;unindent selected lines 对所选行进行缩排处理&#x2F;撤销缩排处理</p>
+</li>
+<li><p>Ctrl + X or Shift + Delete<br>Cut current line or selected block to clipboard 剪切当前行或所选代码块到剪切板</p>
+</li>
+<li><p>Ctrl + C or Ctrl + Insert<br>Copy current line or selected block to chipboard 拷贝当前行或者所选代码块到剪切板</p>
+</li>
+<li><p>Ctrl + V or Shift + Insert<br>Paste from clipboard 粘贴剪切板上的内容</p>
+</li>
+<li><p>Ctrl + Shift + V<br>Paste from recent buffers 粘贴缓冲器中最新的内容</p>
+</li>
+<li><p>Ctrl + D<br>Duplicate current line or selected block 复制当前行或者所选代码块</p>
+</li>
+<li><p>Ctrl + Y<br>Delete line at caret 删除光标所在位置行</p>
+</li>
+<li><p>Ctrl + Shift + J<br>Smart line join（HTML and JavaScript only）加入智能行 （HTML 和JavaScript）</p>
+</li>
+<li><p>Ctrl + Enter<br>Smart line split（HTML and JavaScript only）分离智能行 （HTML 和JavaScript）</p>
+</li>
+<li><p>Shift + Enter<br>Start new line 另起一行</p>
+</li>
+<li><p>Ctrl + Shift + U<br>Toggle case for word at caret or selected block 光标所在位置大小写转换</p>
+</li>
+<li><p>Ctrl + Shift + ]&#x2F;[<br>Select till code block end&#x2F;start 选择直到代码块结束&#x2F;开始</p>
+</li>
+<li><p>Ctrl + Delete<br>Delete to word end 删除文字结束</p>
+</li>
+<li><p>Ctrl + Backspace<br>Delete to word start 删除文字开始</p>
+</li>
+<li><p>Ctrl + NumPad+&#x2F;-<br>Expand&#x2F;collapse code block 扩展&#x2F;缩减代码块</p>
+</li>
+<li><p>Ctrl + Shift+ NumPad+<br>Expand all 扩张所有</p>
+</li>
+<li><p>Ctrl + Shift+ NumPad-<br>Collapse 缩减所有</p>
+</li>
+<li><p>Ctrl + F4<br>Close active editor tab 关闭活跃编辑标签</p>
+</li>
+</ul>
+<p>Search&#x2F;replace<strong>搜索&#x2F;替代相关快捷键</strong></p>
+<ul>
+<li>Ctrl + F<br>Find 当前文件内快速查找代码</li>
+<li>Ctrl + Shift + F<br>Find in path 指定文件内寻找路径</li>
+<li>F3<br>Find next 查找下一个</li>
+<li>Shift + F3<br>Find previous 查找上一个</li>
+<li>Ctrl + R<br>Replace 当前文件内代码替代</li>
+<li>Ctrl + Shift + R<br>Replace in path 指定文件内代码批量替代</li>
+</ul>
+<p>Usage Search<strong>搜索相关快捷键</strong></p>
+<ul>
+<li>Alt + F7&#x2F;Ctrl + F7<br>Find usages&#x2F;Find usages in file 找到使用&#x2F;在文件找到使用</li>
+<li>Ctrl + Shift + F7<br>Highlight usages in file文件中精彩使用</li>
+<li>Ctrl + Alt + F7<br>Show usages 显示使用</li>
+</ul>
+<p>Running<strong>运行</strong></p>
+<ul>
+<li>Alt + Shift + F10<br>Select configuration and run 选择构架，运行</li>
+<li>Alt + Shift + F9<br>Select configuration and debug 选择构架，修补漏洞</li>
+<li>Shift + F10<br>Run 运行</li>
+<li>Shift + F9<br>Debug 修补漏洞</li>
+<li>Ctrl + Shift + F10<br>Run context configuration from editor 从编辑运行内容构架</li>
+<li>Ctrl + Shift + X<br>Run command line 运行命令行</li>
+</ul>
+<p>Debugging <strong>Debugging相关快捷键</strong></p>
+<ul>
+<li>F8<br>Step over 不进入函数</li>
+<li>F7<br>Step into 单步执行</li>
+<li>Shift + F7<br>Smart step into 智能单步执行</li>
+<li>Shift + F8<br>Step out 跳出</li>
+<li>Alt + F9<br>Run to cursor 运行到光标处</li>
+<li>Alt+ F8<br>Evaluate expression 评估表达</li>
+<li>F9<br>Resume program 重新开始程序</li>
+<li>Ctrl + F8<br>Toggle breakpoint 切换断点</li>
+<li>Ctrl + Shift + F8<br>View breakpoints 查看断点</li>
+</ul>
+<p>Navigation <strong>定位相关快捷键</strong></p>
+<ul>
+<li>Ctrl + N<br><a target="_blank" rel="noopener" href="http://lib.csdn.net/base/go">Go</a> to class跳转到指定类</li>
+<li>Ctrl + Shift + N<br>Go to file 通过文件名快速查找工程内的文件</li>
+<li>Ctrl + Alt +Shift + N<br>Go to symbol 通过一个字符查找函数位置</li>
+<li>Alt + Right&#x2F; left<br>Go to next&#x2F; previous editor tab 进入下一个&#x2F; 上一个编辑器选项</li>
+<li>F12<br>Go back to previous tool window 进入上一个工具窗口</li>
+<li>Esc<br>Go to editor（from tool window） 从工具窗口进入编辑器</li>
+<li>Shift + Esc<br>Hide active or last active window 隐藏活动窗口</li>
+<li>Ctrl + Shift + F4<br>Close active run&#x2F;message&#x2F;find&#x2F;…tab 关闭活动….标签</li>
+<li>Ctrl + G<br>Go to line 跳转到第几行</li>
+<li>Ctrl + E<br>Recent files popup 弹出最近打开的文件</li>
+<li>Ctrl + Alt + Left&#x2F;Right<br>Navigate back&#x2F;forward 导航前进&#x2F;后退</li>
+<li>Ctrl + Shift + Backspace<br>Navigate to last edit location 向最近编辑定位导航</li>
+<li>Alt + F1<br>Select current file or symbol in any view 查找当前选中的代码或文件在其他界面模块的位置</li>
+<li>Ctrl + B or Ctrl + Click<br>Go to declaration跳转到定义处</li>
+<li>Ctrl + Alt + B<br>Go to implementation(s) 跳转方法实现处</li>
+<li>Ctrl + Shift + B<br>Go to type declaration 跳转方法定义处</li>
+<li>Ctrl + Shift + I<br>Open quick definition lookup 打开定义快速查找</li>
+<li>Ctrl + U<br>Go to super-method&#x2F;super-class 跳转方法&#x2F;超阶级</li>
+<li>Alt + Up&#x2F;Down<br>Go to previous&#x2F;next method 在方法间快速移动定位</li>
+<li>Ctrl + ]&#x2F;[<br>Move to code block end&#x2F;start 跳转到编码块结束&#x2F;开始</li>
+<li>Ctrl + F12<br>File structure popup 文件结构弹出</li>
+<li>Ctrl + H<br>Type hierarchy 类型层次</li>
+<li>Ctrl + Alt + H<br>Call hierarchy 调用层次结构</li>
+<li>F2&#x2F; Shift + F2<br>Next&#x2F;previous highlighted error 跳转到后一个&#x2F;前一个错误，高亮错误或警告快速定位，使用这个快捷键可以快捷在出错的语句之间进行跳转。</li>
+<li>F4&#x2F;Ctrl + Enter<br>Edit source&#x2F; View source 编辑源代码&#x2F;查看源代码</li>
+<li>Alt + Home<br>Show navigation bar 显示导航栏</li>
+<li>F11<br>Toggle bookmark 切换标记</li>
+<li>Ctrl + F11<br>Toggle bookmark with mnemonic 采用记忆切换标记</li>
+<li>Ctrl + #[0-9]<br>Go to numbered bookmark 跳转到带编号的标记</li>
+<li>Shift + F11<br>Show bookmark 显示标记</li>
+</ul>
+<p>Refactoring <strong>重构相关快捷键</strong></p>
+<ul>
+<li>F5<br>Copy 拷贝</li>
+<li>F6<br>Move 移动</li>
+<li>Alt + Delete<br>Safe Delete 安全删除</li>
+<li>Shift + F6<br>Rename 重新命名</li>
+<li>Ctrl + Alt + N<br>Inline Variable 嵌入变量</li>
+<li>Ctrl + Alt + M<br>Extract Method( Javascript only) 提取函数</li>
+<li>Ctrl + Alt + V<br>Introduce Variable 引入变量</li>
+<li>Ctrl + Alt + F<br>Introduce Field 引入域</li>
+<li>Ctrl + Alt + C<br>Introduce Constant 引入常量</li>
+</ul>
+<p>VCS&#x2F;Local History <strong>版本控制系统&#x2F; 本地历史相关快捷键</strong></p>
+<ul>
+<li>Alt +　BackQuote( )<br>‘VCS’quick popup 快速弹出 VCS</li>
+<li>Ctrl + K<br>Commit project to VCS 提交项目至VCS</li>
+<li>Ctrl + T<br>Update project from VCS 从VCS 更新项目</li>
+<li>Alt + Shift + C<br>View recent changes 查看最新改变</li>
+</ul>
+<p>General <strong>常用的相关快捷键</strong></p>
+<ul>
+<li>Ctrl + Shift +A<br>Find action 查找并调用编辑器的功能</li>
+<li>Alt + #[0-9]<br>Open corresponding tool window 快速切换打开界面模块</li>
+<li>Ctrl + Alt + F11<br>Toggle full screen mode 切换全屏模式</li>
+<li>Ctrl + Shift + F12<br>Toggle maximizing editor 切换最大化编辑器</li>
+<li>Alt + Shift + F<br>Add to Favorites 将当前文件添至收藏夹</li>
+<li>Alt + Shift + I<br>Inspect current file with current profile 使用当前属性检查当前文件</li>
+<li>Ctrl + BackQuote( )<br>Quick switch current scheme 快速转换现有组合</li>
+<li>Ctrl + Alt + S<br>Open setting dialog 打开设置对话框</li>
+<li>Ctrl + Tab<br>Switch between tabs and tool window 标签和工具窗的转换（与windows快捷键冲突）</li>
+</ul>
+
+    </article>
+    
+    <div class="read-nums">
+      <!-- id 将作为查询条件 -->
+      <span id="2023/07/05/webstorm/" class="leancloud_visitors" data-flag-title="Your Article Title">
+        <em class="post-meta-item-text">浏览量</em>
+        <i class="leancloud-visitors-count"></i>
+      </span>
+    </div>
+    <div class="comments-intro">
+      <h2>评论区</h2>
+      <p>欢迎你留下宝贵的意见，昵称输入QQ号会显示QQ头像哦~</p>
+    </div>
+    <div id="vcomments" class="vcomments"></div>
+    
+  </div>
+  <div class="article-catelogue">
+    <div class="article-catelogue--wrapper">
+      <div class="catelogue catelogue-1" style="max-height: 400px;overflow: auto;">
+        <h3>目录</h3>
+        <!-- <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-number">1.</span> <span class="toc-text">webstorm快捷键</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E8%AE%BE%E7%BD%AE%E6%8A%80%E5%B7%A7"><span class="toc-number">2.</span> <span class="toc-text">webstorm设置技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97"><span class="toc-number">3.</span> <span class="toc-text">webstorm使用心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebStorm%E9%9B%86%E6%88%90git%E4%BD%BF%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">WebStorm集成git使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E"><span class="toc-number">5.</span> <span class="toc-text">webstorm快捷键说明</span></a></li></ol> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E5%BF%AB%E6%8D%B7%E9%94%AE"><span class="toc-text">webstorm快捷键</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E8%AE%BE%E7%BD%AE%E6%8A%80%E5%B7%A7"><span class="toc-text">webstorm设置技巧</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E4%BD%BF%E7%94%A8%E5%BF%83%E5%BE%97"><span class="toc-text">webstorm使用心得</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WebStorm%E9%9B%86%E6%88%90git%E4%BD%BF%E7%94%A8"><span class="toc-text">WebStorm集成git使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#webstorm%E5%BF%AB%E6%8D%B7%E9%94%AE%E8%AF%B4%E6%98%8E"><span class="toc-text">webstorm快捷键说明</span></a></li></ol>
+      </div>
+      
+        <div class="catelogue catelogue-2">
+          
+            <p>
+              <span>上一篇：</span>
+              <a href="/2023/07/05/vue中的装饰器/">vue-property-decorator</a>
+            </p>
+           
+          
+            <p>
+              <span>下一篇</span>
+              <a href="/2023/07/05/css/">CSS</a>
+            </p>
+          
+        </div>
+      
+    </div>
+  </div>
+</div>
+
+<script src="http://cdn.yangxiang.cc/prism.js"></script>
+
+<script>
+  // var定义，避免pjax重新进来造成的重复声明错误
+  var config = JSON.parse('{"enable":true,"appId":"Pf8zCXGEH1qsprnWfikVVujL-gzGzoHsz","appKey":"qOqoiUHhH1TGtLRUYURkLRQX","placeholder":"请留下你宝贵的意见吧~","meta":["nick"],"recordIP":true,"visitor":true,"enableQQ":true}')
+  new Valine({
+    el: '#vcomments',
+    appId: config.appId,
+    appKey: config.appKey,
+    placeholder: config.placeholder,
+    meta: config.meta,
+    recordIP: config.recordIP,
+    visitor: config.visitor,
+    enableQQ: config.enableQQ,
+    path: '2023/07/05/webstorm/'
+  })
+</script>
+
+
+<script>
+  $(document).on('pjax:complete', function() {
+    const tocs = document.querySelector('.toc')
+    const links = tocs ? tocs.querySelectorAll('a') : []
+    links.forEach(link => {
+      link.addEventListener('click', e => {
+        const href = decodeURIComponent(e.href)
+        href.search(/#(.*)/)
+        const id = RegExp.$1
+        const target = document.querySelector('#' + id)
+        const top = target.offsetTop
+        document.documentElement.scrollTo({
+          top: top - 100,
+          behavior: 'smooth'
+        })
+        e.preventDefault()
+      })
+    })
+  })
+</script> 
+
+</div>
+      <div class="main-right-wrapper"><div class="main-right">
+  <div class="main-right--board">
+    <div class="main-right--title">
+      <h5>公告栏</h5>
+      <i class="iconfont icon-gonggao"></i>
+    </div>
+    <div class="main-right--content">
+      Hello~，欢迎你们来到我的博客小站，希望能在这里收获到有用的东西哦！ 
+    </div>
+  </div>
+
+  <div id="aplayer" class="main-right--music"></div>
+
+  <div class="operate-items">
+    <div class="operate-item backtop">
+      <i class="iconfont icon-huidaodingbu"></i>
+      <span>回到顶部</span>
+    </div>
+    
+    <div class="operate-item turn-comment hidden">
+      <i class="iconfont icon-pinglun"></i>
+      <span>查看评论</span>
+    </div>
+    
+  </div>
+
+  <!-- <div class="main-right--site">
+    <div class="main-right--power">
+      <p>Power By <a target="_blank" rel="noopener" href="https://hexo.io/zh-cn/docs/">Hexo</a>.</p>
+      <p>Theme：<a target="_blank" rel="noopener" href="https://github.com/Aizener/hexo-theme-cola">Cola.</a></p>
+    </div>
+    <p class="main-right--refer"><a target="_blank" rel="noopener" href="https://beian.miit.gov.cn/#/Integrated/index"></a> </p>
+  </div> -->
+</div>
+
+<script>
+  function setOperateItem () {
+    const reg = /\d{4}\/\d{2}\/\d{2}\/.+/
+    const path = location.pathname
+    const operateDom = document.querySelector('.main-right .operate-items')
+    const commentDom = document.querySelector('.turn-comment')
+    const cateloguDom = document.querySelector('.article-catelogue > .article-catelogue--wrapper');
+
+    if (commentDom) {
+      if (reg.test(path) || path.match(/\/log\/.+/)) {
+        commentDom.classList.remove('hidden')
+        const newDom = operateDom.cloneNode(true);
+        const _backtopDom = newDom.querySelector('.backtop');
+        const _commentDom = newDom.querySelector('.turn-comment');
+        console.log(_commentDom)
+        _backtopDom.addEventListener('click', () => backTopEvent());
+        _commentDom.addEventListener('click', () => commentDomEvent());
+
+        cateloguDom.appendChild(newDom);
+      } else {
+        commentDom.classList.add('hidden')
+      }
+    }
+  }
+
+  setOperateItem()
+  const musics = JSON.parse(`[{"name":"安河桥","artist":"宋冬野","url":"http://ting6.yymp3.net:82/new25/songdongye/11.mp3","cover":"https://img2.baidu.com/it/u=1260056724,1076343118&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"},{"name":"卡布达","artist":"暂无","url":"music/kabuda.mp3","cover":"https://img2.baidu.com/it/u=705831265,2862720033&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=500"}]`)
+  const ap = new APlayer({
+    container: document.querySelector('#aplayer'),
+    audio: musics,
+  })
+
+  $(document).on('pjax:complete', function() {
+    setOperateItem()
+  })
+
+  document.querySelector('.backtop').addEventListener('click', () => {
+    backTopEvent();
+  })
+  const dom = document.querySelector('.turn-comment')
+  dom && dom.addEventListener('click', () => {
+    commentDomEvent();
+  })
+
+  function backTopEvent() {
+    document.documentElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  function commentDomEvent() {
+    const commentDom = document.querySelector('.comments-intro')
+    if (!commentDom) return
+    const top = commentDom.offsetTop, height = commentDom.offsetHeight
+    document.documentElement.scrollTo({
+      top: top - 2 * height,
+      behavior: 'smooth'
+    })
+  }
+</script></div>
+    </section>
+  </div>
+  <div id="progress" class="progress"></div>
+  <div id="gray" class="gray"></div>
+
+  <script>
+    function initScroll () {
+      document.addEventListener('scroll', () => {
+        const doc = document.documentElement
+        const scrollTop = doc.scrollTop
+        const pageHeight = doc.offsetHeight
+        const clientHeight = doc.clientHeight
+        const ratio = scrollTop / (pageHeight - clientHeight)
+        const progress = document.querySelector('#progress')
+        const avatarImg = document.querySelector('.main-left--avatar')
+        progress.style.width = (100 * ratio) + '%'
+        avatarImg.style.transform = `rotate(${360 * ratio}deg)`
+      })
+    }
+
+    const rootPath = "/"
+
+    const checkAndSetArticlePageLayout = () => {
+      if (/^\/?\d{4}\/\d{2}\/\d{2}\/.*/.test(location.pathname.replace(rootPath, ''))) {
+        $('.main-container, .main-right, .main-right-wrapper').addClass('is-article')
+      } else {
+        $('.main-container, .main-right, .main-right-wrapper').removeClass('is-article')
+      }
+    }
+
+    const gray = "none"
+    const setGrayStyle = () => {
+      if (gray === 'none') {
+        return
+      } else if (gray === 'index') {
+        location.pathname === '/' ? $('#gray').show() : $('#gray').hide()
+      } else if (gray === 'all') {
+        $('#gray').show()
+      }
+    }
+    setGrayStyle()
+
+
+    window.onload = function () {
+      checkAndSetArticlePageLayout()
+      setTimeout(() => {
+        $('#load').slideUp()
+        $('#container').slideToggle()
+        setTimeout(() => {
+          initScroll();
+          window.loadImageFn();
+        }, 500)
+      }, 500)
+    }
+    
+    let status = 0
+    // 对所有链接跳转事件绑定pjax容器container
+    $(document).pjax('a[target!=_blank]', '#main-container', {
+      container: '#main-container',
+      fragment: '#main-container',
+      timeout: 8000
+    })
+
+    $(document).on('pjax:start', function() {
+    })
+    $(document).on('pjax:complete', function() {
+      status = 0
+      $('.main-container').addClass('to-up').on('animationend', function() {
+        $(this).removeClass('to-up')
+      })
+      setGrayStyle()
+      checkAndSetArticlePageLayout()
+    })
+    $(document).on('pjax:popstate', function() {
+      status = -1
+      checkAndSetArticlePageLayout()
+      // $('.main-container').fadeIn()
+    })
+  </script>
+</body>
+</html>
